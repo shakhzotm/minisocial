@@ -1,0 +1,33 @@
+<div class="post" style="border:1px solid #ddd; padding:15px; width:350px;">
+    <!-- Автор и фото -->
+    <h3>{{ post.author.username }}</h3>
+    {% if post.image %}
+      <img src="{{ post.image.url }}" width="200">
+    {% endif %}
+    <p>{{ post.description }}</p>
+
+    <!-- Лайки -->
+    <form method="post" action="{% url 'like_post' post.id %}">
+        {% csrf_token %}
+        <button type="submit">
+            ❤️ {{ post.total_likes }}
+        </button>
+    </form>
+
+    <!-- Комментарии -->
+    <h4>Комментарии:</h4>
+    <ul>
+        {% for comment in post.comments.all %}
+            <li><b>{{ comment.author.username }}</b>: {{ comment.text }}</li>
+        {% empty %}
+            <li>Нет комментариев</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Добавить комментарий -->
+    <form method="post" action="{% url 'add_comment' post.id %}">
+        {% csrf_token %}
+        <textarea name="text" placeholder="Напиши комментарий..." rows="2"></textarea><br>
+        <button type="submit">Отправить</button>
+    </form>
+</div>

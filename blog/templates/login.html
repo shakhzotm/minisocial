@@ -1,0 +1,18 @@
+<h2>Вход</h2>
+<form method="post">
+	{%csrf_token %}
+	<input type='text' name='username' placeholder="Имя пользователя"><br>
+	<input type='password' name='password' placeholder="Пароль"><br>
+	<button type="submit">Войти</button>
+</form>
+<a href="{% url 'register' %}">Зарегистрироваться</a>
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {{ message }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

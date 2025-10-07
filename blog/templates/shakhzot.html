@@ -1,0 +1,7 @@
+<div>Я {{user}}</div>
+<form action="{% url 'add' %}" method="post">
+	{% csrf_token %}
+	<button type='submit'>Кнопка</button>
+</form>
+
+<p>Количество: {{index}}</p>
