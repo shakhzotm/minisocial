@@ -172,12 +172,28 @@
       header{padding:12px 14px}
       .post-top .mini-avatar{width:40px;height:40px}
     }
+
+    .post-link {
+      text-decoration: none;
+      color: inherit;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .post-link:hover .post-card {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(22,28,45,0.08);
+    }
+    /* чтобы кнопка лайка не срабатывала переходом */
+    .post-card form button {
+      pointer-events: all;
+    }
+
+
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Лента — {{ user.username }}</h1>
+  <h1>{{ user.username }}</h1>
   <nav>
     <a href="{% url 'profile' user.username %}">Профиль</a>
     <a href="{% url 'create_post' %}">Создать пост</a>
@@ -191,9 +207,6 @@
       <strong>Все посты</strong>
       <div style="color:var(--muted); font-size:13px;">Пользователь: {{ user.username }}</div>
     </div>
-    <div class="top-actions">
-      <a href="{% url 'create_post' %}">Новый пост</a>
-    </div>
   </div>
 
   {% if messages %}
@@ -205,8 +218,9 @@
   {% endif %}
 
   {% if posts %}
-    <div class="posts-list">
-      {% for post in posts %}
+  <div class="posts-list">
+    {% for post in posts %}
+      <a href="{% url 'post_detail' post.id %}" class="post-link">
         <article class="post-card">
           <div class="post-top">
             <div class="mini-avatar"
@@ -215,16 +229,14 @@
                  {% endif %}></div>
 
             <div>
-              <a href="{% url 'profile' post.author.username %}" class="post-author">{{ post.author.username }}</a>
+              <span class="post-author">{{ post.author.username }}</span>
               <div class="post-time">{{ post.created_at|date:"d.m.Y H:i" }}</div>
             </div>
           </div>
 
           {% if post.image %}
             <div class="post-media">
-              <a href="{% url 'post_detail' post.id %}">
-                <img src="{{ post.image.url }}" alt="Фото поста">
-              </a>
+              <img src="{{ post.image.url }}" alt="Фото поста">
             </div>
           {% endif %}
 
@@ -233,18 +245,20 @@
           </div>
 
           <div class="post-actions">
-            <form action="{% url 'like_post' post.id %}" method="post" style="margin:0;">
+            <form action="{% url 'like_post' post.id %}" method="post" enctype="multipart/form-data" style="margin:0;" onclick="event.stopPropagation();">
               {% csrf_token %}
               <button type="submit" class="like-btn">❤️ {{ post.total_likes }}</button>
             </form>
-            <a class="comments-link" href="{% url 'post_detail' post.id %}#comments">Комментировать</a>
+            <span class="comments-link">Комментировать</span>
           </div>
         </article>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="no-posts">Постов пока нет 🙃</div>
-  {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="no-posts">Постов пока нет 🙃</div>
+{% endif %}
+
 
 </main>
 </body>

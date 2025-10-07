@@ -1,7 +1,164 @@
-<h2>Создать пост</h2>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Создать пост</title>
+  <style>
+    :root {
+      --bg: #f4f4f9;
+      --card-bg: #ffffff;
+      --border: rgba(0,0,0,0.08);
+      --accent: #007bff;
+      --accent-hover: #005fd1;
+      --muted: #777;
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(24,39,75,0.06);
+    }
 
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Опубликовать</button>
-</form>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      color: #222;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #111;
+    }
+
+    header nav a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-left: 14px;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px;
+      border: 1px solid var(--border);
+    }
+
+    main h2 {
+      text-align: center;
+      font-size: 22px;
+      margin-top: 0;
+      color: #111;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    form p {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fafafa;
+      font-size: 15px;
+      transition: border 0.2s, background 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      background: #fff;
+      outline: none;
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .back-link {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Создать пост</h1>
+  <nav>
+    <a href="{% url 'profile' user.username %}">Профиль</a>
+    <a href="{% url 'logout' %}">Выйти</a>
+  </nav>
+</header>
+
+<main>
+  <h2>Новый пост</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">📤 Опубликовать</button>
+  </form>
+
+  <a href="{% url 'profile' user.username %}" class="back-link">← Вернуться к профилю</a>
+</main>
+
+</body>
+</html>

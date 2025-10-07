@@ -1,18 +1,135 @@
-<h2>Вход</h2>
-<form method="post">
-	{%csrf_token %}
-	<input type='text' name='username' placeholder="Имя пользователя"><br>
-	<input type='password' name='password' placeholder="Пароль"><br>
-	<button type="submit">Войти</button>
-</form>
-<a href="{% url 'register' %}">Зарегистрироваться</a>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <style>
+    :root {
+      --bg: #f4f4f9;
+      --card-bg: #fff;
+      --accent: #007bff;
+      --accent-hover: #005fd1;
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(24,39,75,0.06);
+      --border: rgba(0,0,0,0.08);
+    }
 
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-        {{ message }}
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 350px;
+      border: 1px solid var(--border);
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 25px;
+      color: #222;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      background: #fafafa;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      outline: none;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .messages {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    .messages li {
+      background: #ffeaea;
+      color: #a10000;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Вход</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Имя пользователя" required>
+      <input type="password" name="password" placeholder="Пароль" required>
+      <button type="submit">Войти</button>
+    </form>
+
+    <a href="{% url 'register' %}">Создать аккаунт</a>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+</body>
+</html>

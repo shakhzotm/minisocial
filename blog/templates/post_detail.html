@@ -1,33 +1,198 @@
-<div class="post" style="border:1px solid #ddd; padding:15px; width:350px;">
-    <!-- Автор и фото -->
-    <h3>{{ post.author.username }}</h3>
-    {% if post.image %}
-      <img src="{{ post.image.url }}" width="200">
-    {% endif %}
-    <p>{{ post.description }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Пост @{{ post.author.username }}</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
 
-    <!-- Лайки -->
-    <form method="post" action="{% url 'like_post' post.id %}">
-        {% csrf_token %}
-        <button type="submit">
-            ❤️ {{ post.total_likes }}
-        </button>
-    </form>
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
 
-    <!-- Комментарии -->
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .post-header h3 {
+      margin: 0;
+      color: #333;
+    }
+
+    .post-header small {
+      color: #777;
+    }
+
+    .post-image {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .post-image img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .post-description {
+      margin-top: 10px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .like-form {
+      margin-top: 12px;
+    }
+
+    .like-form button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #e0245e;
+      transition: transform 0.1s ease;
+    }
+
+    .like-form button:hover {
+      transform: scale(1.1);
+    }
+
+    .comments-section {
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+    }
+
+    .comments-section h4 {
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .comment-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .comment-list li {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .comment-list li strong {
+      color: #222;
+    }
+
+    .no-comments {
+      color: #777;
+      font-style: italic;
+    }
+
+    .add-comment {
+      margin-top: 18px;
+    }
+
+    .add-comment textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .add-comment button {
+      margin-top: 8px;
+      padding: 8px 15px;
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.15s ease;
+    }
+
+    .add-comment button:hover {
+      background-color: #3578e5;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: 500;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Автор и дата -->
+  <div class="post-header">
+    <h3>@{{ post.author.username }}</h3>
+    <small>{{ post.created_at|date:"d M Y H:i" }}</small>
+  </div>
+
+  <!-- Изображение -->
+  {% if post.image %}
+    <div class="post-image">
+      <img src="{{ post.image.url }}" alt="Фото поста">
+    </div>
+  {% endif %}
+
+  <!-- Описание -->
+  <p class="post-description">{{ post.description|linebreaksbr }}</p>
+
+  <!-- Лайки -->
+  <form method="post" action="{% url 'like_post' post.id %}" class="like-form">
+    {% csrf_token %}
+    <button type="submit">❤️ {{ post.total_likes }}</button>
+  </form>
+
+  <!-- Комментарии -->
+  <div class="comments-section">
     <h4>Комментарии:</h4>
-    <ul>
-        {% for comment in post.comments.all %}
-            <li><b>{{ comment.author.username }}</b>: {{ comment.text }}</li>
-        {% empty %}
-            <li>Нет комментариев</li>
-        {% endfor %}
+    <ul class="comment-list">
+      {% for comment in post.comments.all %}
+        <li><strong>{{ comment.author.username }}</strong>: {{ comment.text }}</li>
+      {% empty %}
+        <li class="no-comments">Комментариев пока нет 🙃</li>
+      {% endfor %}
     </ul>
+  </div>
 
-    <!-- Добавить комментарий -->
-    <form method="post" action="{% url 'add_comment' post.id %}">
-        {% csrf_token %}
-        <textarea name="text" placeholder="Напиши комментарий..." rows="2"></textarea><br>
-        <button type="submit">Отправить</button>
-    </form>
+  <!-- Добавить комментарий -->
+  <form method="post" action="{% url 'add_comment' post.id %}" class="add-comment">
+    {% csrf_token %}
+    <textarea name="text" placeholder="Напиши комментарий..." rows="2"></textarea>
+    <button type="submit">Отправить</button>
+  </form>
+
+  <a href="{% url 'post_list' %}" class="back-link">← Назад к постам</a>
 </div>
+
+</body>
+</html>
