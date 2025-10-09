@@ -1,0 +1,178 @@
+
+
+{% load static %}
+
+{% block content %}
+<div class="followers-page">
+
+  <div class="followers-header">
+    <h2>Подписчики и Подписки {{ profile_user.username }}</h2>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="followers">Подписчики</button>
+    <button class="tab-btn" data-tab="following">Подписки</button>
+  </div>
+
+  <div id="followers" class="tab-content active">
+    {% if followers %}
+      {% for user in followers %}
+        <div class="user-card">
+          <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-avatar">
+          <a href="{% url 'profile' user.username %}" class="user-name">{{ user.username }}</a>
+          {% if request.user != user %}
+            {% if user in following %}
+              <form action="{% url 'unfollow_user' username=user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="unfollow-btn">Отписаться</button>
+              </form>
+            {% else %}
+              <form action="{% url 'follow_user' username=user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="follow-btn">Подписаться</button>
+              </form>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty">Пока нет подписчиков.</p>
+    {% endif %}
+  </div>
+
+  <div id="following" class="tab-content">
+    {% if following %}
+      {% for user in following %}
+        <div class="user-card">
+          <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="user-avatar">
+          <a href="{% url 'profile' user.username %}" class="user-name">{{ user.username }}</a>
+          {% if request.user != user %}
+            {% if user in following %}
+              <form action="{% url 'unfollow_user' username=user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="unfollow-btn">Отписаться</button>
+              </form>
+            {% else %}
+              <form action="{% url 'follow_user' username=user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="follow-btn">Подписаться</button>
+              </form>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="empty">Пока нет подписок.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(btn => btn.classList.remove('active'));
+      tab.classList.add('active');
+      contents.forEach(c => c.classList.remove('active'));
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+<style>
+.followers-page {
+  max-width: 500px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.followers-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #777;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+  color: #000;
+  border-bottom: 2px solid #3897f0;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.user-name {
+  flex-grow: 1;
+  text-decoration: none;
+  color: #262626;
+  font-weight: 500;
+}
+
+.follow-btn, .unfollow-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.follow-btn {
+  background-color: #3897f0;
+  color: white;
+}
+
+.unfollow-btn {
+  background-color: #efefef;
+  color: #262626;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 20px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+</style>
+{% endblock %}

@@ -186,14 +186,28 @@
     .post-card form button {
       pointer-events: all;
     }
-
+    .profile-avatar{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      background:#ddd;
+      background-size:cover;
+      background-position:center;
+      flex:0 0 40px;
+      border:1px solid rgba(0,0,0,0.05);
+    }
 
   </style>
 </head>
 <body>
 
 <header>
+  <div class="profile-avatar"
+         {% if user.profile.avatar %}
+           style="background-image: url('{{ user.profile.avatar.url }}');"
+         {% endif %}></div>
   <h1>{{ user.username }}</h1>
+
   <nav>
     <a href="{% url 'profile' user.username %}">Профиль</a>
     <a href="{% url 'create_post' %}">Создать пост</a>
@@ -229,7 +243,7 @@
                  {% endif %}></div>
 
             <div>
-              <span class="post-author">{{ post.author.username }}</span>
+              <a href='{% url "profile" username=post.author.username %}' class="post-author">{{ post.author.username }}</a>
               <div class="post-time">{{ post.created_at|date:"d.m.Y H:i" }}</div>
             </div>
           </div>

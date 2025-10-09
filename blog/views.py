@@ -3,10 +3,11 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Post, Comment, Coinshakhzot, Profile
+from .models import Post, Comment, Coinshakhzot, Profile, Follow
 from django.contrib import messages
 from .forms import ProfileForm, PostForm
 from django.http import HttpResponse, HttpResponseForbidden
+from django.db.utils import IntegrityError
 # Create your views here.
 def helloword(request):
 	return HttpResponse('Hello, Братишка')
@@ -104,10 +105,15 @@ def logout_view(request):
 
 @login_required
 def profile_view(request, username):
-    user = get_object_or_404(User, username=username)
-    profile = user.profile
-    posts = Post.objects.all().filter(author=user).order_by('-created_at')
-    return render(request, 'profile.html', {'profile': profile, 'posts': posts, 'profile_user': user})
+    user = request.user
+    profile_user = get_object_or_404(User, username=username)
+    profile = profile_user.profile 
+    posts = Post.objects.all().filter(author=profile_user).order_by('-created_at')
+
+    is_following = False
+    if user.is_authenticated:
+        is_following = user.following.filter(followed=profile_user).exists()
+    return render(request, 'profile.html', {'profile': profile, 'posts': posts, 'profile_user': profile_user, 'user': user, 'is_following': is_following})
 
 
 @login_required
@@ -119,7 +125,7 @@ def profile_edit(request, username):
     profile = user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('profile', username=request.user.username)
@@ -141,3 +147,45 @@ def create_post(request):
     else:
         form = PostForm()
     return render(request, 'create_post.html', {'form': form})
+
+@login_required
+def follow_user(request, username):
+    user_to_follow = get_object_or_404(User, username=username)
+
+    if request.user == user_to_follow:
+        messages.error(request, 'Вы не можете подписаться на самого себя!')
+        return redirect('profile', username=username)
+
+    if request.method=='POST':
+        try:
+            Follow.objects.create(follower=request.user, followed=user_to_follow)
+            messages.success(request, f"Вы подписались на {username}")
+        except IntegrityError:
+            messages.warning(request, f"Вы уже подписаны на {username}")
+
+    return redirect('profile', username=username)
+
+
+@login_required
+def unfollow_user(request, username):
+    user_to_unfollow = get_object_or_404(User, username=username)
+
+    if request.method=='POST':
+        Follow.objects.filter(
+            follower=request.user,
+            followed=user_to_unfollow
+            ).delete()
+
+        messages.success(request, f"Вы отписались от {username}")
+    return redirect('profile', username=username)
+
+
+
+@login_required
+def followers(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    followers = User.objects.filter(following__followed=profile_user)
+    following = User.objects.filter(followers__follower=profile_user)
+    return render(request, 'followers_list.html', {'followers':followers, 'following':following})
+
+ 

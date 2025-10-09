@@ -4,185 +4,245 @@
   <meta charset="UTF-8" />
   <title>Профиль {{ profile_user.username }}</title>
   <style>
-    :root{
-      --bg:#f4f4f9;
-      --card-bg:#ffffff;
-      --muted:#8a8f98;
-      --accent:#007bff;
-      --danger:#e0245e;
-      --border:rgba(0,0,0,0.08);
-      --shadow: 0 6px 20px rgba(24,39,75,0.06);
-      --radius:12px;
+    :root {
+      --bg: #f4f4f9;
+      --card-bg: #ffffff;
+      --muted: #8a8f98;
+      --accent: #007bff;
+      --danger: #e0245e;
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 6px 20px rgba(24, 39, 75, 0.06);
+      --radius: 12px;
     }
 
-    *{box-sizing:border-box}
-    body{
+    * { box-sizing: border-box; }
+
+    body {
       font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background:var(--bg);
-      margin:0;
-      color:#222;
-      -webkit-font-smoothing:antialiased;
+      background: var(--bg);
+      margin: 0;
+      color: #222;
+      -webkit-font-smoothing: antialiased;
     }
 
-    header{
-      background:var(--card-bg);
-      padding:14px 28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      box-shadow:0 1px 0 rgba(0,0,0,0.04);
-      position:sticky;
-      top:0;
-      z-index:50;
-    }
-    header h1{margin:0;font-size:18px;color:#111}
-    header nav a{color:var(--accent); text-decoration:none; margin-left:14px; font-weight:500}
-    header nav a:hover{text-decoration:underline}
-
-    main{
-      max-width:980px;
-      margin:28px auto;
-      padding:22px;
+    header {
+      background: var(--card-bg);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
-    /* профиль */
-    .profile-card{
-      display:flex;
-      gap:20px;
-      align-items:center;
-      background:var(--card-bg);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px;
+    header h1 { margin: 0; font-size: 18px; color: #111; }
+    header nav a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-left: 14px;
+      font-weight: 500;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    main {
+      max-width: 980px;
+      margin: 28px auto;
+      padding: 22px;
+    }
+
+    /* ---------- ПРОФИЛЬ ---------- */
+    .profile-card {
+      display: flex;
+      gap: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
       box-shadow: var(--shadow);
-      margin-bottom:22px;
+      margin-bottom: 30px;
+      align-items: flex-start;
     }
 
-    .profile-avatar{
-      width:84px;
-      height:84px;
-      border-radius:50%;
-      background:#ddd;
-      background-size:cover;
-      background-position:center;
-      flex:0 0 84px;
-      border:1px solid rgba(0,0,0,0.05);
+    .profile-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 220px;
+      
     }
 
-    .profile-info h2{margin:0 0 6px 0; font-size:20px}
-    .profile-meta{color:var(--muted); font-size:14px; margin-bottom:8px}
-    .profile-bio{margin:6px 0 0 0; color:#333; line-height:1.4}
-
-    .edit-link{
-      margin-top:10px;
-      display:inline-block;
-      padding:8px 14px;
-      background:var(--accent);
-      color:#fff;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:600;
+    .profile-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #ddd;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid rgba(0, 0, 0, 0.05);
     }
-    .edit-link:hover{background:#0062d6}
 
-    /* сетка постов */
-    .posts-grid{
-      display:grid;
+    .profile-bio {
+      margin-top: 12px;
+      color: #333;
+      line-height: 1.5;
+      font-size: 15px;
+      word-break: break-word;
+      
+    }
+
+    .profile-meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .profile-right {
+      flex: 1;
+    }
+
+    .profile-right h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .follow-stats {
+      display: flex;
+      gap: 22px;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .follow-stats span strong {
+      color: #111;
+    }
+
+    .edit-link {
+      margin-top: 16px;
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+    .edit-link:hover { background: #0062d6; }
+
+    /* ---------- ПОСТЫ ---------- */
+    .posts-grid {
+      display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap:18px;
+      gap: 18px;
     }
 
-    .post-card{
-      background:var(--card-bg);
-      border:1px solid var(--border);
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow: 0 4px 14px rgba(22,28,45,0.04);
+    .post-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(22, 28, 45, 0.04);
       transition: transform .15s ease, box-shadow .15s ease;
-      display:flex;
-      flex-direction:column;
+      display: flex;
+      flex-direction: column;
     }
-    .post-card:hover{
+    .post-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(22,28,45,0.08);
+      box-shadow: 0 12px 30px rgba(22, 28, 45, 0.08);
     }
 
-    .post-top{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:12px 14px;
-    }
-    .post-top .mini-avatar{
-      width:40px; height:40px; border-radius:50%;
-      background:#ddd; background-size:cover; background-position:center;
-      border:1px solid rgba(0,0,0,0.04);
-      flex:0 0 40px;
-    }
-    .post-author{font-weight:700; color:#111; text-decoration:none}
-    .post-author:hover{text-decoration:underline}
-    .post-time{color:var(--muted); font-size:12px}
-
-    .post-media{
-      width:100%;
-      background:#fafafa;
-      display:block;
-      max-height:360px;
-      overflow:hidden;
-    }
-    .post-media img{
-      display:block;
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .post-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
     }
 
-    .post-body{padding:12px 14px; flex:1}
-    .post-text{margin:0 0 10px 0; color:#222; line-height:1.45}
-    .post-actions{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 14px;
-      border-top:1px solid rgba(0,0,0,0.03);
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    .mini-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ddd;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      flex: 0 0 40px;
     }
 
-    .like-btn{
-      background:none;
-      border:1px solid rgba(0,0,0,0.06);
-      padding:6px 10px;
-      border-radius:8px;
-      cursor:pointer;
-      color:var(--danger);
-      font-weight:600;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .like-btn:hover{transform:scale(1.03)}
+    .post-author { font-weight: 700; color: #111; text-decoration: none; }
+    .post-author:hover { text-decoration: underline; }
+    .post-time { color: var(--muted); font-size: 12px; }
 
-    .comments-link{
-      color:var(--muted);
-      text-decoration:none;
-      font-size:14px;
+    .post-media img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
     }
 
-    .no-posts{
-      padding:20px;
-      text-align:center;
-      color:var(--muted);
+    .post-body { padding: 12px 14px; flex: 1; }
+    .post-text { margin: 0 0 10px 0; color: #222; line-height: 1.45; }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-top: 1px solid rgba(0, 0, 0, 0.03);
     }
 
-    @media (max-width:640px){
-      .profile-card{flex-direction:column; align-items:flex-start}
-      .profile-avatar{width:72px;height:72px}
+    .like-btn {
+      background: none;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--danger);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .like-btn:hover { transform: scale(1.03); }
+
+    .comments-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .no-posts {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      .profile-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .profile-left {
+        width: 100%;
+      }
+
+      .follow-stats {
+        justify-content: center;
+      }
+
+      .edit-link {
+        align-self: center;
+      }
     }
   </style>
 </head>
 <body>
-
 <header>
   <h1>Профиль {{ profile_user.username }}</h1>
   <nav>
@@ -193,28 +253,55 @@
 </header>
 
 <main>
-  <!-- профиль -->
   <div class="profile-card">
-    <div class="profile-avatar"
-         {% if profile.avatar %}
-           style="background-image: url('{{ profile.avatar.url }}');"
-         {% endif %}></div>
-
-    <div class="profile-info">
-      <h2>{{ profile_user.get_full_name|default:profile_user.username }}</h2>
-      <div class="profile-meta">
-        <span><strong>Город:</strong> {{ profile.city|default:"—" }}</span> &nbsp;·&nbsp;
-        <span><strong>День рождения:</strong> {{ profile.birth_date|date:"d.m.Y"|default:"—" }}</span>
+    <!-- Левая часть -->
+    <div class="profile-left">
+      <div class="profile-avatar"
+           {% if profile.avatar %}
+             style="background-image: url('{{ profile.avatar.url }}');"
+           {% endif %}>
       </div>
+
       <div class="profile-bio">{{ profile.bio|default:"Пока ничего не написано." }}</div>
+      <div class="profile-meta">
+        <strong>Город:</strong> {{ profile.city|default:"—" }}<br>
+        <strong>День рождения:</strong> {{ profile.birth_date|date:"d.m.Y"|default:"—" }}
+      </div>
+    </div>
+
+    <!-- Правая часть -->
+    <div class="profile-right">
+      <h2>{{ profile_user.get_full_name|default:profile_user.username }}</h2>
+      <div class="follow-stats">
+        <a href="{% url 'followers' username=profile_user%}"><strong>Подписчики:</a> {{ profile_user.followers.count }}</span>
+        <a href="{% url 'followers' username=profile_user%}"><strong>Подписки:</a> {{ profile_user.following.count }}</span>
+      </div>
 
       {% if request.user == profile_user %}
         <a class="edit-link" href="{% url 'profile_edit' profile_user.username %}">Редактировать профиль</a>
       {% endif %}
+
+      {% if user != profile_user %}
+    {# Проверяем, подписан ли текущий пользователь на этот профиль #}
+    
+    {% if is_following %}
+        {# 1. Если ПОДПИСАН, показываем кнопку "Отписаться" (UNFOLLOW) #}
+        <form action="{% url 'unfollow_user' username=profile_user.username %}" method="post" style="display:inline-block; margin-top:10px;">
+            {% csrf_token %}
+            <button type="submit" class="edit-link" style="background: #e0245e; font-weight: 500;">Отписаться</button>
+        </form>
+    {% else %}
+        {# 2. Если НЕ ПОДПИСАН, показываем кнопку "Подписаться" (FOLLOW) #}
+        <form action="{% url 'follow_user' username=profile_user.username %}" method="post" style="display:inline-block; margin-top:10px;">
+            {% csrf_token %}
+            <button type="submit" class="edit-link">Подписаться</button>
+        </form>
+    {% endif %}
+
+{% endif %}
     </div>
   </div>
 
-  <!-- посты -->
   <h3 style="margin:6px 0 12px 2px; color:#333;">Посты {{ profile_user.username }}</h3>
 
   {% if posts %}
@@ -225,7 +312,8 @@
             <div class="mini-avatar"
                  {% if post.author.profile.avatar %}
                    style="background-image: url('{{ post.author.profile.avatar.url }}');"
-                 {% endif %}></div>
+                 {% endif %}>
+            </div>
             <div>
               <a href="{% url 'profile' post.author.username %}" class="post-author">{{ post.author.username }}</a><br>
               <span class="post-time">{{ post.created_at }}</span>
@@ -249,7 +337,6 @@
               {% csrf_token %}
               <button type="submit" class="like-btn">❤️ {{ post.total_likes }}</button>
             </form>
-
             <a class="comments-link" href="{% url 'post_detail' post.id %}#comments">Комментировать</a>
           </div>
         </div>
@@ -258,7 +345,6 @@
   {% else %}
     <div class="no-posts">Постов пока нет 🙃</div>
   {% endif %}
-
 </main>
 </body>
 </html>
